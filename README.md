@@ -1,4 +1,4 @@
-# CodeSync 🚀  
+# CodeSync
 ## Real-Time Collaborative Coding Platform
 
 CodeSync is a modern **real-time collaborative coding platform** that enables multiple users to **write, edit, execute, and discuss code simultaneously** within a shared virtual environment. The platform is designed to solve the limitations of traditional coding platforms that mainly focus on individual coding practice and often lack efficient collaboration capabilities.
