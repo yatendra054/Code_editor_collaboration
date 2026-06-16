@@ -8,10 +8,16 @@ dotenv.config();
  */
 class AIService {
   constructor() {
-    this.model = new ChatGroq({
-      apiKey: process.env.GROQ_API_KEY,
+    this.modelConfig = {
       model: "llama-3.3-70b-versatile",
       temperature: 0.4,
+    };
+  }
+
+  getModel() {
+    return new ChatGroq({
+      apiKey: process.env.GROQ_API_KEY,
+      ...this.modelConfig,
     });
   }
 
@@ -46,7 +52,7 @@ INSTRUCTIONS:
 4. If you are asked to "auto-generate" or "fix" code, provide the full relevant snippet.
       `;
 
-      const response = await this.model.invoke([
+      const response = await this.getModel().invoke([
         ["system", systemPrompt],
         ["human", prompt],
       ]);

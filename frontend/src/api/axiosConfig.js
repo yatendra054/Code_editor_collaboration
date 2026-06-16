@@ -1,8 +1,9 @@
 import axios from "axios";
+import { API_URL } from "../utils/constants";
 
 // Create an Axios instance
 const apiClient = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || "https://codesync-osdn.onrender.com", // Backend URL
+  baseURL: API_URL,
   withCredentials: true, // Important for cookies (Session ID)
   headers: {
     "Content-Type": "application/json",
