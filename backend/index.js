@@ -26,9 +26,10 @@ console.log("this is the url", await dns.getServers());
 dotenv.config();
 
 const isProduction = process.env.NODE_ENV === "production";
+const normalizeOrigin = (value) => value?.replace(/\/$/, "");
 const allowedOrigins = [
-  process.env.CLIENT_URL,
-  "https://codesync-realtime-editor.vercel.app",
+  normalizeOrigin(process.env.CLIENT_URL),
+  "https://codeeditorcollab.vercel.app",
   "http://localhost:5173",
   "http://localhost:3000",
 ].filter(Boolean);
