@@ -29,9 +29,9 @@ const isProduction = process.env.NODE_ENV === "production";
 const normalizeOrigin = (value) => value?.replace(/\/$/, "");
 const allowedOrigins = [
   normalizeOrigin(process.env.CLIENT_URL),
-  "https://codeeditor-phi-lac.vercel.app/",
-  "http://localhost:5173",
-  "http://localhost:3000",
+  "https://codeeditor-phi-lac.vercel.app",
+  // "http://localhost:5173",
+  // "http://localhost:3000",
 ].filter(Boolean);
 
 const app = express();
