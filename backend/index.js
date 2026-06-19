@@ -30,6 +30,7 @@ const normalizeOrigin = (value) => value?.replace(/\/$/, "");
 const allowedOrigins = [
   normalizeOrigin(process.env.CLIENT_URL),
   "https://codeeditcollab.vercel.app/",
+  
   // "http://localhost:5173",
   // "http://localhost:3000",
 ].filter(Boolean);
