@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { HelpCircle, X, MessageCircle, Book, Video, Mail } from 'lucide-react';
 
 const HelpButton = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const navigate = useNavigate();
 
   const helpOptions = [
     {
@@ -16,7 +18,7 @@ const HelpButton = () => {
       icon: Book,
       title: "Documentation",
       description: "Browse our comprehensive guides",
-      action: () => window.open('#docs', '_blank')
+      action: () => navigate('/docs')
     },
     {
       icon: Video,

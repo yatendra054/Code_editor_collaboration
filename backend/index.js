@@ -31,8 +31,8 @@ const allowedOrigins = [
   normalizeOrigin(process.env.CLIENT_URL),
   "https://realtimeeditor-three.vercel.app",
 
-  // "http://localhost:5173",
-  // "http://localhost:3000",
+  "http://localhost:5173",
+  "http://localhost:3000",
 ].filter(Boolean);
 
 const app = express();

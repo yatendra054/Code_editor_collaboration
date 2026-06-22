@@ -23,9 +23,7 @@ const JoinRoom = ({ onJoin }) => {
     if (validateForm()) {
       setIsJoining(true);
       onJoin(roomId, userName, password);
-      // We don't necessarily set isJoining back to false here because 
-      // the component will either unmount (success) or we handle error via props/toast
-      // But for better UX if the request is fast or fails locally:
+
       setTimeout(() => setIsJoining(false), 2000); 
     } else {
       toast.error("Please fill in all required fields");

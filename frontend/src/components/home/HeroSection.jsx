@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { motion, useAnimation } from "framer-motion";
 import { Code, ArrowRight, Play, Sparkles, Zap, Star } from "lucide-react";
+import { useAuth } from "../../context/AuthContext";
 
 // Dynamic Code Animation Component
 const DynamicCodeEditor = () => {
@@ -172,6 +173,7 @@ const AnimatedCounter = ({ end, duration = 2000, delay = 0 }) => {
 };
 
 const HeroSection = () => {
+  const { user } = useAuth();
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const controls = useAnimation();
 
@@ -297,7 +299,7 @@ const HeroSection = () => {
                 whileTap={{ scale: 0.95 }}
             >
               <Link
-                to="/signup"
+                to={user ? "/editor" : "/signup"}
                   className="group bg-gradient-to-r from-blue-500 to-blue-600 text-white px-8 py-4 rounded-xl font-semibold flex items-center gap-2 justify-center transition-all duration-300 hover:shadow-2xl hover:shadow-blue-500/25 relative overflow-hidden"
                 >
                   <motion.div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
@@ -335,12 +337,12 @@ const HeroSection = () => {
             >
               {[
                 {
-                  number: "10K+",
+                  number: "5K+",
                   label: "Active Developers",
                   color: "from-blue-400 to-cyan-400",
                 },
                 {
-                  number: "50+",
+                  number: "10+",
                   label: "Languages Supported",
                   color: "from-purple-400 to-pink-400",
                 },

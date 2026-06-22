@@ -78,11 +78,11 @@ export const SUPPORTED_LANGUAGES = [
   { value: "cpp", label: "C++", icon: "⚡" }
 ];
 
-// Navigation Links
 export const NAV_LINKS = [
   { name: "Home", path: "/" },
   { name: "Code Editor", path: "/editor" },
-  { name: "Room History", path: "/roomProfile" }
+  { name: "Room History", path: "/roomProfile" },
+  { name: "Docs", path: "/docs" }
 ];
 
 // Footer Quick Links

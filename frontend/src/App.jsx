@@ -35,6 +35,7 @@ const Home = lazy(() => import("./pages/Home"));
 const EditorPage = lazy(() => import("./pages/EditorPage"));
 const Login = lazy(() => import("./components/auth/Login"));
 const Signup = lazy(() => import("./components/auth/Signup"));
+const DocumentationPage = lazy(() => import("./pages/DocumentationPage"));
 
 const App = () => {
   return (
@@ -65,6 +66,7 @@ const App = () => {
                     path="/editor"
                     element={<EditorPage />}
                   />
+                  <Route path="/docs" element={<DocumentationPage />} />
                   <Route path="/about" element={<Navigate to="/#about" />} />
                   <Route path="*" element={<Navigate to="/" />} />
                 </Routes>

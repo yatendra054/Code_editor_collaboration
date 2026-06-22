@@ -1,6 +1,8 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { useScrollReveal } from '../../hooks/useScrollReveal';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
 import FeatureCard from './FeatureCard';
 import { 
   Zap, 
@@ -18,6 +20,8 @@ import {
 } from 'lucide-react';
 
 const Features = () => {
+  const { user } = useAuth();
+  const navigate = useNavigate();
   const [ref, isVisible] = useScrollReveal({ threshold: 0.1 });
 
   const containerVariants = {
@@ -57,7 +61,7 @@ const Features = () => {
     },
     {
       icon: Puzzle,
-      title: "50+ Languages",
+      title: "10+ Languages",
       description: "Support for all major programming languages with intelligent syntax highlighting, auto-completion, and error detection.",
       color: "#3b82f6",
       gradient: "from-blue-400 to-indigo-500"
@@ -227,7 +231,7 @@ const Features = () => {
             className="cta-button bg-gradient-to-r from-blue-500 to-indigo-600 text-white mb-4 px-8 py-4 rounded-xl font-semibold text-base transition-all hover:shadow-2xl hover:shadow-blue-500/25"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            onClick={() => window.location.href = '/editor'}
+            onClick={() => navigate(user ? '/editor' : '/signup')}
           >
             Start Coding Now
           </motion.button>

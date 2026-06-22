@@ -181,6 +181,8 @@ export const RoomProvider = ({ children }) => {
         }
       }
       setIsWaitingForApproval(false);
+      setJoined(true);
+      toast.success("Successfully joined the room!");
     };
 
     const handleCodeUpdate = (newCode) => {
@@ -394,8 +396,6 @@ export const RoomProvider = ({ children }) => {
     socketRef.current.emit("join", { roomId: newRoomId, userName: newUserName, userId: user?._id || socketRef.current.id });
     setRoomId(newRoomId);
     setUserName(newUserName);
-    setJoined(true);
-    toast.success(`Joining room ${newRoomId}...`);
   };
 
   const handleCodeChange = (newCode, currentLine = 1) => {

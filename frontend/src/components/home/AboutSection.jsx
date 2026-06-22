@@ -15,75 +15,12 @@ import {
   Zap
 } from 'lucide-react';
 
-// Animated Counter Component
-const AnimatedCounter = ({ end, duration = 2000, delay = 0 }) => {
-  const [count, setCount] = useState(0);
-  const [isVisible, setIsVisible] = useState(false);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-        }
-      },
-      { threshold: 0.1 }
-    );
-
-    const element = document.getElementById('about-stats');
-    if (element) observer.observe(element);
-
-    return () => observer.disconnect();
-  }, []);
-
-  useEffect(() => {
-    if (!isVisible) return;
-
-    const timer = setTimeout(() => {
-      const startTime = Date.now();
-      const startValue = 0;
-      
-      // Extract the numeric value, handling decimals
-      const numericMatch = end.match(/(\d+\.?\d*)/);
-      const endValue = numericMatch ? parseFloat(numericMatch[1]) : 0;
-      const suffix = end.replace(/[\d.]/g, ''); // Extract suffix like "K+", "M+", "%"
-
-      const animate = () => {
-        const elapsed = Date.now() - startTime;
-        const progress = Math.min(elapsed / duration, 1);
-        
-        // Easing function for smooth animation
-        const easeOutQuart = 1 - Math.pow(1 - progress, 4);
-        const currentValue = startValue + (endValue - startValue) * easeOutQuart;
-        
-        setCount(currentValue);
-
-        if (progress < 1) {
-          requestAnimationFrame(animate);
-        }
-      };
-
-      requestAnimationFrame(animate);
-    }, delay);
-
-    return () => clearTimeout(timer);
-  }, [isVisible, end, duration, delay]);
-
-  const formatNumber = (num) => {
-    if (end.includes('K+')) {
-      return `${Math.floor(num)}K+`;
-    } else if (end.includes('M+')) {
-      return `${Math.floor(num)}M+`;
-    } else if (end.includes('%')) {
-      return `${num.toFixed(1)}%`;
-    }
-    return `${Math.floor(num)}+`;
-  };
-
-  return <span>{formatNumber(count)}</span>;
-};
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from "../../context/AuthContext";
 
 const AboutSection = () => {
+  const { user } = useAuth();
+  const navigate = useNavigate();
   const [isVisible, setIsVisible] = useState(false);
   const controls = useAnimation();
 
@@ -104,16 +41,10 @@ const AboutSection = () => {
     return () => observer.disconnect();
   }, [controls]);
 
-  const statsData = [
-    { icon: Users, number: "50K+", label: "Active Developers", color: "#3b82f6", gradient: "from-blue-400 to-cyan-400" },
-    { icon: Code, number: "1M+", label: "Lines of Code", color: "#10b981", gradient: "from-green-400 to-emerald-400" },
-    { icon: Globe, number: "180+", label: "Countries", color: "#f59e0b", gradient: "from-yellow-400 to-orange-400" },
-    { icon: Clock, number: "99.9%", label: "Uptime", color: "#ef4444", gradient: "from-red-400 to-pink-400" }
-  ];
 
   const achievements = [
     "Real-time collaborative editing with zero conflicts",
-    "Advanced syntax highlighting for 50+ languages",
+    "Advanced syntax highlighting for 10+ languages",
     "Enterprise-grade security and compliance",
     "Seamless integration with popular development tools",
     "24/7 customer support and community",
@@ -122,23 +53,20 @@ const AboutSection = () => {
 
   const teamMembers = [
     {
-      name: "Alex Chen",
-      role: "Founder & CEO",
-      description: "Former Google engineer with 10+ years in distributed systems",
+      name: "Yatendra Pachori",
+      role: "Backend Developer",
       avatar: "👨‍💻",
       color: "#3b82f6"
     },
     {
-      name: "Sarah Johnson",
-      role: "CTO",
-      description: "Ex-Microsoft architect specializing in real-time applications",
+      name: "Nikhil Singh",
+      role: "Full Stack Developer",
       avatar: "👩‍💼",
       color: "#8b5cf6"
     },
     {
-      name: "Marcus Rodriguez",
-      role: "Lead Designer",
-      description: "Award-winning UX designer focused on developer tools",
+      name: "Ranvijay Kumar",
+      role: "Designer",
       avatar: "🎨",
       color: "#f59e0b"
     }
@@ -232,11 +160,12 @@ const AboutSection = () => {
           </motion.p>
         </motion.div>
 
-        <div className="grid md:grid-cols-2 gap-16 mb-20">
+        <div className="max-w-4xl mx-auto mb-20">
           <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            animate={isVisible ? { opacity: 1, x: 0 } : { opacity: 0, x: -30 }}
+            initial={{ opacity: 0, y: 30 }}
+            animate={isVisible ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
             transition={{ duration: 0.8, delay: 0.2 }}
+            className="text-center"
           >
             <h3 className="text-3xl font-bold text-white mb-6">
               Our{' '}
@@ -244,31 +173,32 @@ const AboutSection = () => {
                 Story
               </span>
             </h3>
-            <p className="text-gray-300 mb-4">
+            <p className="text-gray-300 mb-4 max-w-2xl mx-auto">
               Founded in 2023 by a team of passionate engineers from leading tech companies, 
               CodeSync emerged from a simple observation: coding is inherently social, 
               yet most development tools are designed for isolation.
             </p>
-            <p className="text-gray-300 mb-8">
+            <p className="text-gray-300 mb-8 max-w-2xl mx-auto">
               We envisioned a world where developers could collaborate as naturally as 
               they think - in real-time, without barriers, with the full power of 
               modern development tools at their fingertips.
             </p>
             
-            <div className="mt-10">
-              <h4 className="text-xl font-semibold text-white mb-4">What Makes Us Different</h4>
-              <div className="space-y-3">
+            <div className="mt-10 max-w-3xl mx-auto text-left">
+              <h4 className="text-xl font-semibold text-white mb-4 text-center">What Makes Us Different</h4>
+              <div className="grid sm:grid-cols-2 gap-4">
                 {achievements.map((achievement, index) => (
                   <motion.div
                     key={index}
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={isVisible ? { opacity: 1, x: 0 } : { opacity: 0, x: -20 }}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={isVisible ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
                     transition={{ duration: 0.5, delay: 0.5 + (index * 0.1) }}
-                    className="flex items-center gap-3 text-green-400 text-sm group hover:text-green-300 transition-colors duration-300"
+                    className="flex items-center gap-3 text-green-400 text-sm group hover:text-green-300 transition-colors duration-300 bg-gray-800/30 p-4 rounded-xl border border-gray-700/50"
                   >
                     <motion.div
                       animate={isVisible ? { scale: [1, 1.2, 1] } : {}}
                       transition={{ duration: 0.5, delay: 0.5 + (index * 0.1) }}
+                      className="shrink-0"
                     >
                       <CheckCircle size={16} />
                     </motion.div>
@@ -278,101 +208,8 @@ const AboutSection = () => {
               </div>
             </div>
           </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, x: 30 }}
-            animate={isVisible ? { opacity: 1, x: 0 } : { opacity: 0, x: 30 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
-            className="relative"
-          >
-            <div className="absolute left-6 top-0 bottom-0 w-0.5 bg-gradient-to-b from-blue-500 via-purple-500 to-blue-600"></div>
-            {[
-              { year: "2023", text: "CodeSync founded with $2M seed funding", color: "#3b82f6" },
-              { year: "Early 2024", text: "Beta launch with 1,000+ developers", color: "#8b5cf6" },
-              { year: "Mid 2024", text: "Series A funding and global expansion", color: "#f59e0b" },
-              { year: "2025", text: "50K+ active users worldwide", color: "#10b981" }
-            ].map((item, index) => (
-              <motion.div 
-                key={index} 
-                className="relative pl-16 mb-10 last:mb-0"
-                initial={{ opacity: 0, x: 20 }}
-                animate={isVisible ? { opacity: 1, x: 0 } : { opacity: 0, x: 20 }}
-                transition={{ duration: 0.5, delay: 0.6 + (index * 0.1) }}
-              >
-                <motion.div 
-                  className="absolute left-0 top-2 w-4 h-4 rounded-full border-4 border-gray-900"
-                  style={{ backgroundColor: item.color }}
-                  animate={isVisible ? { scale: [0, 1.2, 1] } : {}}
-                  transition={{ duration: 0.5, delay: 0.6 + (index * 0.1) }}
-                />
-                <div className="ml-2">
-                  <h4 className="font-semibold mb-2" style={{ color: item.color }}>{item.year}</h4>
-                  <p className="text-gray-300 text-sm">{item.text}</p>
-                </div>
-              </motion.div>
-            ))}
-          </motion.div>
         </div>
 
-        <motion.div
-          id="about-stats"
-          initial={{ opacity: 0, y: 30 }}
-          animate={isVisible ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
-          transition={{ duration: 0.8, delay: 0.6 }}
-          className="text-center mb-20"
-        >
-          <h3 className="text-3xl font-bold text-white mb-12">
-            By the{' '}
-            <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
-              Numbers
-            </span>
-          </h3>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-7">
-            {statsData.map((stat, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={isVisible ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.8 }}
-                transition={{ duration: 0.5, delay: 0.8 + (index * 0.1) }}
-                whileHover={{ scale: 1.05, y: -5 }}
-                className="bg-gray-800/50 backdrop-blur-sm border border-gray-700/50 rounded-2xl p-8 text-center group hover:border-gray-600/50 transition-all duration-300"
-              >
-                <motion.div 
-                  className="mb-6 flex justify-center"
-                  animate={isVisible ? { rotate: [0, 360] } : {}}
-                  transition={{ duration: 1, delay: 0.8 + (index * 0.1) }}
-                >
-                  <div 
-                    className="w-12 h-12 rounded-xl flex items-center justify-center backdrop-blur-sm border border-white/20"
-                    style={{ backgroundColor: `${stat.color}20` }}
-                  >
-                    <stat.icon size={24} style={{ color: stat.color }} />
-                  </div>
-                </motion.div>
-                <motion.div 
-                  className={`text-3xl font-bold mb-2 bg-gradient-to-r ${stat.gradient} bg-clip-text text-transparent`}
-                  animate={isVisible ? { 
-                    backgroundPosition: ['0% 50%', '100% 50%', '0% 50%']
-                  } : {}}
-                  transition={{ 
-                    duration: 2, 
-                    repeat: Infinity, 
-                    ease: "linear",
-                    delay: 1 + (index * 0.2)
-                  }}
-                  style={{ backgroundSize: '200% 200%' }}
-                >
-                  <AnimatedCounter 
-                    end={stat.number} 
-                    duration={2500} 
-                    delay={index * 300} 
-                  />
-                </motion.div>
-                <div className="text-gray-400 text-sm group-hover:text-gray-300 transition-colors">{stat.label}</div>
-              </motion.div>
-            ))}
-          </div>
-        </motion.div>
 
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -478,7 +315,7 @@ const AboutSection = () => {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               className="group bg-gradient-to-r from-blue-500 to-blue-600 text-white px-8 py-4 rounded-xl font-semibold flex items-center gap-2 justify-center relative overflow-hidden"
-              onClick={() => window.location.href = '/signup'}
+              onClick={() => navigate(user ? '/editor' : '/signup')}
             >
               <motion.div
                 className="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
