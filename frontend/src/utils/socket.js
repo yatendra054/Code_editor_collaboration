@@ -1,6 +1,6 @@
 import io from "socket.io-client";
 
-const socketUrl = import.meta.env.VITE_SOCKET_URL || import.meta.env.VITE_API_URL || "http://localhost:4000";
+const socketUrl = import.meta.env.VITE_SOCKET_URL || import.meta.env.VITE_API_URL || "https://code-editor-collaboration-12.onrender.com";
 
 const socket = io(socketUrl, {
   reconnection: true,
