@@ -24,8 +24,8 @@ export const generateRoomId = () => {
 
 // Input validation rules per language
 export const INPUT_VALIDATORS = {
-  javascript: (input) => ({ valid: true, message: "" }),
-  python: (input) => ({ valid: true, message: "" }),
+  javascript: () => ({ valid: true, message: "" }),
+  python: () => ({ valid: true, message: "" }),
   java: (input) => {
     if (input.trim() === "") return { valid: true, message: "" };
     if (/^[\d\s]+$/.test(input)) return { valid: true, message: "" };
