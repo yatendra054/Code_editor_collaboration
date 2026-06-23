@@ -99,7 +99,6 @@ export const SOCIAL_LINKS = [
   { name: "Twitter", href: "https://twitter.com/codesync", icon: "Twitter" }
 ];
 
-export const API_URL =
-  import.meta.env.VITE_API_URL || "https://code-editor-collaboration-11.onrender.com";
+export const API_URL = import.meta.env.VITE_API_URL || "http://localhost:4000";
 
 // export const API_URL = import.meta.env.VITE_API_URL || "http://192.168.X.X:4000";
