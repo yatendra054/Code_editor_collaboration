@@ -27,13 +27,29 @@ dotenv.config();
 
 const isProduction = process.env.NODE_ENV === "production";
 const normalizeOrigin = (value) => value?.replace(/\/$/, "");
-const allowedOrigins = [
-  normalizeOrigin(process.env.CLIENT_URL),
-  "https://codeeditorweb.vercel.app/",
+const allowedOrigins = new Set(
+  [
+    normalizeOrigin(process.env.CLIENT_URL),
+    "https://codeeditorweb.vercel.app",
+    "http://localhost:5173",
+    "http://localhost:3000",
+  ].filter(Boolean)
+);
 
-  // "http://localhost:5173",
-  // "http://localhost:3000",
-].filter(Boolean);
+const isAllowedOrigin = (origin) => {
+  const normalizedOrigin = normalizeOrigin(origin);
+
+  if (allowedOrigins.has(normalizedOrigin)) {
+    return true;
+  }
+
+  try {
+    const hostname = new URL(normalizedOrigin).hostname;
+    return hostname.endsWith(".vercel.app");
+  } catch {
+    return false;
+  }
+};
 
 const app = express();
 const server = http.createServer(app);
@@ -48,7 +64,7 @@ app.use(
         return callback(null, true);
       }
 
-      if (allowedOrigins.includes(origin)) {
+      if (isAllowedOrigin(origin)) {
         return callback(null, true);
       }
 
