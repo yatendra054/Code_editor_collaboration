@@ -24,7 +24,7 @@ const HelpButton = () => {
       icon: Video,
       title: "Video Tutorials",
       description: "Watch step-by-step tutorials",
-      action: () => window.open('#tutorials', '_blank')
+      action: () => alert("Video Tutorials coming soon!")
     },
     {
       icon: Mail,
