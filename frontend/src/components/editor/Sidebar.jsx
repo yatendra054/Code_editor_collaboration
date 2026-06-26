@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { FiCopy, FiUsers, FiRefreshCw, FiGlobe, FiCode, FiClock, FiEdit, FiEdit3 } from "react-icons/fi";
+import { FiCopy, FiUsers, FiRefreshCw, FiGlobe, FiCode, FiClock, FiEdit, FiEdit3, FiChevronDown, FiChevronUp } from "react-icons/fi";
 import { toast } from "react-toastify";
 import { SUPPORTED_LANGUAGES } from "../../utils/constants";
 import { useAuth } from "../../context/AuthContext";
@@ -10,7 +10,6 @@ const Sidebar = ({
   sidebarOpen, 
   roomId, 
   users, 
-  userName, 
   typingUsers, 
   lastEditor,
   language, 
@@ -23,6 +22,7 @@ const Sidebar = ({
   const { saveSession } = useRoom();
   const [now, setNow] = useState(Date.now());
   const [isSaving, setIsSaving] = useState(false);
+  const [isToolsCollapsed, setIsToolsCollapsed] = useState(false);
 
   const handleSave = async () => {
     setIsSaving(true);
@@ -62,13 +62,6 @@ const Sidebar = ({
   const copyRoomId = () => {
     navigator.clipboard.writeText(roomId);
     toast.success("Room ID copied to clipboard!");
-  };
-
-  const getTypingMessage = () => {
-    if (typingUsers.length === 0) return null;
-    if (typingUsers.length === 1) return `${typingUsers[0].userName} is typing...`;
-    if (typingUsers.length === 2) return `${typingUsers[0].userName} and ${typingUsers[1].userName} are typing...`;
-    return `${typingUsers[0].userName} and ${typingUsers.length - 1} others are typing...`;
   };
 
   const currentLanguage = SUPPORTED_LANGUAGES.find(lang => lang.value === language);
@@ -193,75 +186,94 @@ const Sidebar = ({
           (Removed from sidebar as it is now inline in CodeEditor)
       */}
 
-      {/* Last Edited By Section */}
-      {lastEditor && (
-        <div className="px-6 pb-4">
-          <div className="bg-gray-800/80 rounded-xl p-3 border border-gray-700/50 flex flex-col gap-1 shadow-lg">
-            <h3 className="text-xs font-semibold text-gray-400 flex items-center gap-1.5 uppercase tracking-wider">
-              <FiClock size={12} className="text-blue-400" /> Last Edit
-            </h3>
-            <div className="text-sm text-gray-200 flex flex-wrap items-baseline gap-1.5 mt-1">
-              <span className="font-medium text-gray-100 truncate max-w-[120px]">{lastEditor.userName}</span> 
-              <span className="text-gray-500 text-xs italic">
-                {Math.floor(Math.max(0, now - lastEditor.timestamp) / 60000) < 1 
-                  ? 'just now' 
-                  : `${Math.floor(Math.max(0, now - lastEditor.timestamp) / 60000)} min${Math.floor(Math.max(0, now - lastEditor.timestamp) / 60000) > 1 ? 's' : ''} ago`}
-              </span>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Language Selection */}
-      <div className="p-6 pt-4">
-        <div className="flex items-center gap-2 mb-3">
-          <div className="w-6 h-6 bg-orange-500/20 rounded-lg flex items-center justify-center">
-            <FiGlobe size={16} className="text-orange-400" />
-          </div>
-          <label className="text-sm font-medium text-gray-300">Programming Language</label>
-        </div>
-        <select
-          value={language}
-          onChange={onLanguageChange}
-          className="w-full bg-gray-800/80 border border-gray-700 rounded-xl p-3 text-white focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200 hover:border-gray-600"
+      <div className="border-t border-gray-700/50 bg-gray-900/40 backdrop-blur-sm">
+        <button
+          type="button"
+          onClick={() => setIsToolsCollapsed((prev) => !prev)}
+          className="w-full px-6 py-4 flex items-center justify-between text-left hover:bg-white/5 transition-colors duration-200"
+          aria-expanded={!isToolsCollapsed}
         >
-          {SUPPORTED_LANGUAGES.map((lang) => (
-            <option key={lang.value} value={lang.value}>
-              {lang.icon} {lang.label}
-            </option>
-          ))}
-        </select>
-        {currentLanguage && (
-          <div className="text-xs text-gray-400 mt-2 flex items-center gap-2">
-            <span className="w-1 h-1 bg-gray-400 rounded-full"></span>
-            Current: {currentLanguage.icon} {currentLanguage.label}
+          <div>
+            <p className="text-sm font-semibold text-gray-200">Room Tools</p>
+            <p className="text-xs text-gray-400 mt-1">Language, session save, and room actions</p>
           </div>
-        )}
-      </div>
-
-      {/* Action Buttons */}
-      <div className="p-6 pt-4 border-t border-gray-700/50 bg-gray-900/50 backdrop-blur-sm space-y-3">
-        {currentUser && (
-          <button 
-            className="w-full flex items-center justify-center gap-2 bg-blue-500 hover:bg-blue-600 text-white py-3 rounded-xl font-medium transition-all duration-200 hover:scale-[1.02] hover:shadow-lg active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
-            onClick={handleSave}
-            disabled={isSaving}
-          >
-            {isSaving ? (
-              <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-            ) : (
-              <FiSave size={16} />
-            )}
-            {isSaving ? "Saving..." : "Save Session"}
-          </button>
-        )}
-        <button 
-          className="w-full flex items-center justify-center gap-2 bg-red-500 hover:bg-red-600 text-white py-3 rounded-xl font-medium transition-all duration-200 hover:scale-[1.02] hover:shadow-lg active:scale-95"
-          onClick={onLeaveRoom}
-        >
-          <FiRefreshCw size={16} />
-          Leave Room
+          {isToolsCollapsed ? <FiChevronUp size={18} className="text-gray-400" /> : <FiChevronDown size={18} className="text-gray-400" />}
         </button>
+
+        {!isToolsCollapsed && (
+          <>
+            {/* Last Edited By Section */}
+            {lastEditor && (
+              <div className="px-6 pb-4">
+                <div className="bg-gray-800/80 rounded-xl p-3 border border-gray-700/50 flex flex-col gap-1 shadow-lg">
+                  <h3 className="text-xs font-semibold text-gray-400 flex items-center gap-1.5 uppercase tracking-wider">
+                    <FiClock size={12} className="text-blue-400" /> Last Edit
+                  </h3>
+                  <div className="text-sm text-gray-200 flex flex-wrap items-baseline gap-1.5 mt-1">
+                    <span className="font-medium text-gray-100 truncate max-w-[120px]">{lastEditor.userName}</span> 
+                    <span className="text-gray-500 text-xs italic">
+                      {Math.floor(Math.max(0, now - lastEditor.timestamp) / 60000) < 1 
+                        ? 'just now' 
+                        : `${Math.floor(Math.max(0, now - lastEditor.timestamp) / 60000)} min${Math.floor(Math.max(0, now - lastEditor.timestamp) / 60000) > 1 ? 's' : ''} ago`}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Language Selection */}
+            <div className="p-6 pt-4">
+              <div className="flex items-center gap-2 mb-3">
+                <div className="w-6 h-6 bg-orange-500/20 rounded-lg flex items-center justify-center">
+                  <FiGlobe size={16} className="text-orange-400" />
+                </div>
+                <label className="text-sm font-medium text-gray-300">Programming Language</label>
+              </div>
+              <select
+                value={language}
+                onChange={onLanguageChange}
+                className="w-full bg-gray-800/80 border border-gray-700 rounded-xl p-3 text-white focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200 hover:border-gray-600"
+              >
+                {SUPPORTED_LANGUAGES.map((lang) => (
+                  <option key={lang.value} value={lang.value}>
+                    {lang.icon} {lang.label}
+                  </option>
+                ))}
+              </select>
+              {currentLanguage && (
+                <div className="text-xs text-gray-400 mt-2 flex items-center gap-2">
+                  <span className="w-1 h-1 bg-gray-400 rounded-full"></span>
+                  Current: {currentLanguage.icon} {currentLanguage.label}
+                </div>
+              )}
+            </div>
+
+            {/* Action Buttons */}
+            <div className="p-6 pt-4 border-t border-gray-700/50 bg-gray-900/50 backdrop-blur-sm space-y-3">
+              {currentUser && (
+                <button 
+                  className="w-full flex items-center justify-center gap-2 bg-blue-500 hover:bg-blue-600 text-white py-3 rounded-xl font-medium transition-all duration-200 hover:scale-[1.02] hover:shadow-lg active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+                  onClick={handleSave}
+                  disabled={isSaving}
+                >
+                  {isSaving ? (
+                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                  ) : (
+                    <FiSave size={16} />
+                  )}
+                  {isSaving ? "Saving..." : "Save Session"}
+                </button>
+              )}
+              <button 
+                className="w-full flex items-center justify-center gap-2 bg-red-500 hover:bg-red-600 text-white py-3 rounded-xl font-medium transition-all duration-200 hover:scale-[1.02] hover:shadow-lg active:scale-95"
+                onClick={onLeaveRoom}
+              >
+                <FiRefreshCw size={16} />
+                Leave Room
+              </button>
+            </div>
+          </>
+        )}
       </div>
     </div>
   );
