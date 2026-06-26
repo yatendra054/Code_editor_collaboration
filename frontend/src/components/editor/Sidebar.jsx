@@ -106,7 +106,7 @@ const Sidebar = ({
       </div>
 
       {/* Users Section */}
-      <div className="flex-1 overflow-hidden flex flex-col">
+      <div className="flex-1 min-h-0 overflow-hidden flex flex-col">
         <div className="p-6 pb-4">
           <div className="flex items-center gap-2 mb-4">
             <div className="w-6 h-6 bg-purple-500/20 rounded-lg flex items-center justify-center">
@@ -119,7 +119,7 @@ const Sidebar = ({
           </div>
         </div>
         
-        <div className="flex-1 overflow-y-auto px-6 pb-4">
+        <div className="flex-1 min-h-0 overflow-y-auto px-6 pb-4 pr-4 scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-transparent overscroll-contain">
           <div className="space-y-2">
             {users.map((user, idx) => {
               const isCurrentUser = user.userId === (currentUser?._id || socket?.id);
